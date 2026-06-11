@@ -1,0 +1,48 @@
+# Secrets and credentials
+.envrc
+.env
+.env.*
+*.tfvars
+!example.tfvars
+.aws/
+*.pem
+*.key
+id_rsa*
+kubeconfig
+kubeconfig.*
+*.kubeconfig
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Helm
+charts/
+*.tgz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build artifacts
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# AI draft outputs (escape hatch convention)
+*.draft.*
