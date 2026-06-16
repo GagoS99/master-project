@@ -2,7 +2,7 @@
 
 Track your current position in the bootcamp. Update the `Current module` line as you progress.
 
-**Current module:** `00-linux`
+**Current module:** `04-argocd-gitops`
 
 ---
 
