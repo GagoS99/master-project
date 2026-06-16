@@ -1,13 +1,40 @@
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-x86_64"]
+  }
+}
+
 resource "aws_security_group" "ec2_sg" {
   name        = "bootcamp-ec2-sg"
   description = "Allow SSH from my IP"
   vpc_id      = var.vpc_id
+
   ingress {
     description = "Nginx NodePort from my IP"
     from_port   = 30080
     to_port     = 30080
     protocol    = "tcp"
-    cidr_blocks = ["5.77.201.81/32"]
+    cidr_blocks = ["5.77.194.122/32"]
+  }
+
+  ingress {
+    description = "Frontend NodePort from my IP"
+    from_port   = 30081
+    to_port     = 30081
+    protocol    = "tcp"
+    cidr_blocks = ["5.77.194.122/32"]
+  }
+
+  ingress {
+    description = "API NodePort from my IP"
+    from_port   = 30082
+    to_port     = 30082
+    protocol    = "tcp"
+    cidr_blocks = ["5.77.194.122/32"]
   }
 
   ingress {
@@ -15,7 +42,7 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["5.77.201.81/32"]
+    cidr_blocks = ["5.77.194.122/32"]
   }
 
   ingress {
@@ -23,7 +50,7 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 6443
     to_port     = 6443
     protocol    = "tcp"
-    cidr_blocks = ["5.77.201.81/32"]
+    cidr_blocks = ["5.77.194.122/32"]
   }
 
   egress {
@@ -45,13 +72,19 @@ resource "aws_key_pair" "bootcamp" {
 }
 
 resource "aws_instance" "main" {
-  ami                         = "ami-0c101f26f147fa7fd"
+  ami                         = data.aws_ami.amazon_linux.id
   instance_type               = "t3.micro"
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   key_name                    = aws_key_pair.bootcamp.key_name
   associate_public_ip_address = true
   iam_instance_profile        = var.instance_profile_name
+
+  root_block_device {
+    volume_size = 20    # GB — free tier allows up to 30GB gp3
+    volume_type = "gp3"
+    delete_on_termination = true
+  }
 
   user_data_replace_on_change = true
 
@@ -62,7 +95,7 @@ set -eux
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="v1.30.4+k3s1" sh -s - server \
   --disable servicelb \
   --disable traefik \
-  --tls-san 3.230.130.236 \
+  --tls-san ${aws_eip.main.public_ip} \
   --write-kubeconfig-mode 644
 EOF
 }

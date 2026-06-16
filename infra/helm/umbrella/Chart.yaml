@@ -1,0 +1,21 @@
+# DRAFT — review every line before applying.
+apiVersion: v2
+name: bootcamp
+description: Umbrella chart — api + frontend + postgresql
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies:
+  # file:// paths are relative to this Chart.yaml — they point to your local charts
+  - name: api
+    version: "0.1.0"
+    repository: "file://../api"
+  - name: frontend
+    version: "0.1.0"
+    repository: "file://../frontend"
+  # bitnami/postgresql is pulled from the remote repo.
+  # Run `helm dependency update infra/helm/umbrella` to download it into charts/.
+  - name: postgresql
+    version: "15.5.38"   # pin a version; check artifacthub.io for the latest stable
+    repository: "https://charts.bitnami.com/bitnami"

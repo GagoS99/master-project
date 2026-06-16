@@ -1,0 +1,11 @@
+# DRAFT — review every line before applying.
+# DATABASE_URL removed — credentials must not live in a ConfigMap (plain text, no access control).
+# The Deployment reads DATABASE_URL from a Secret via secretKeyRef instead.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "api.fullname" . }}-config
+  labels:
+    {{- include "api.labels" . | nindent 4 }}
+data:
+  PORT: {{ .Values.env.PORT | quote }}

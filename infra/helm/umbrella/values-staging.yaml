@@ -1,0 +1,27 @@
+# DRAFT — review every line before applying.
+# Staging overrides — more replicas and resources than dev
+
+api:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+frontend:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+postgresql:
+  primary:
+    persistence:
+      size: 5Gi

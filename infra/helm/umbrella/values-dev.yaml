@@ -1,0 +1,27 @@
+# DRAFT — review every line before applying.
+# Dev overrides — merged on top of values.yaml at install time with -f values-dev.yaml
+
+api:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+frontend:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      cpu: 50m
+      memory: 32Mi
+
+postgresql:
+  primary:
+    persistence:
+      size: 1Gi

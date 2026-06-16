@@ -1,0 +1,44 @@
+# DRAFT — review every line before applying.
+# Each top-level key maps to a dependency name in Chart.yaml.
+# Helm passes the block to the subchart as its own .Values.
+
+api:
+  replicaCount: 1
+  image:
+    repository: gagost/bootcamp-api
+    tag: "1.0.0"
+  database:
+    urlSecretName: api-db   # Secret must be created before `helm upgrade --install`
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: gagost/bootcamp-frontend
+    tag: "1.0.0"
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30081
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+# postgresql subchart values — full list at artifacthub.io/packages/helm/bitnami/postgresql
+postgresql:
+  auth:
+    postgresPassword: ""   # set at install time: --set postgresql.auth.postgresPassword=<value>
+    database: items
+  primary:
+    persistence:
+      size: 2Gi

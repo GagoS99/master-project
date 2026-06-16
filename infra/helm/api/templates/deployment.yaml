@@ -1,0 +1,39 @@
+# DRAFT — review every line before applying.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "api.fullname" . }}
+  labels:
+    {{- include "api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    # selector is IMMUTABLE after creation — must match template labels exactly
+    matchLabels:
+      {{- include "api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "api.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: {{ .Values.env.PORT | quote }}
+            # DATABASE_URL pulled from a Secret — value never touches this file or values.yaml
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.urlSecretName }}
+                  key: url          # the key inside the Secret object
+          resources:
+            # toYaml converts the map from values.yaml to indented YAML;
+            # nindent 12 adds the right indentation for this nesting level
+            {{- toYaml .Values.resources | nindent 12 }}
