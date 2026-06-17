@@ -16,5 +16,8 @@ spec:
     server: https://kubernetes.default.svc
     namespace: bootcamp
   syncPolicy:
+    automated:
+      selfHeal: true   # DRAFT — reverts manual kubectl changes automatically
+      # prune: true    # left commented — only enable after stable; deletes resources removed from Git
     syncOptions:
       - CreateNamespace=true
