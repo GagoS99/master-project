@@ -36,6 +36,8 @@ frontend:
 
 # postgresql subchart values — full list at artifacthub.io/packages/helm/bitnami/postgresql
 postgresql:
+  image:
+    tag: "latest" # DRAFT — review every line before applying.
   auth:
     postgresPassword: devonly-change-me # override at install time with --set, never commit real value
     database: items
