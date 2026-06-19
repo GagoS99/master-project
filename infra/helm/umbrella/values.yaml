@@ -16,6 +16,8 @@ api:
     limits:
       cpu: 200m
       memory: 128Mi
+  metrics:
+    enabled: true
 
 frontend:
   replicaCount: 1
