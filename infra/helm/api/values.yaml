@@ -1,10 +1,8 @@
-# DRAFT — review every line before applying.
-
 replicaCount: 1
 
 image:
   repository: gagost/bootcamp-api
-  tag: "1.0.0"           # Never "latest" — you need reproducible deploys
+  tag: "1.0.0"
   pullPolicy: IfNotPresent
 
 service:
@@ -12,20 +10,19 @@ service:
   port: 8080
   nodePort: 30082
 
-# Without requests, the scheduler has no data and kubelet evicts under pressure.
-# t3.micro has ~1 GB RAM — be conservative.
 resources:
   requests:
-    cpu: 50m        # 50 millicores = 0.05 of one CPU
+    cpu: 50m
     memory: 64Mi
   limits:
     cpu: 200m
     memory: 128Mi
 
-# Name of the Kubernetes Secret that holds DATABASE_URL.
-# The Secret is created outside the chart so no credential ever lives in git.
 database:
   urlSecretName: api-db
 
 env:
   PORT: "8080"
+
+metrics:
+  enabled: true
