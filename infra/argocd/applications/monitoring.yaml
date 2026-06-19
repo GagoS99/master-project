@@ -14,7 +14,7 @@ spec:
         grafana:
           service:
             type: NodePort
-          adminPassword: monitor 
+          adminPassword: monitor
         prometheus:
           prometheusSpec:
             retention: 5d
@@ -41,3 +41,4 @@ spec:
     automated: {}
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
